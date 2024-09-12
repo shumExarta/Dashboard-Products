@@ -4,27 +4,22 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 import time
 import random
-from functions import get_platform_data, get_zeniva_platform_stats, histogram_data, get_comparison_stats
+from functions import get_platform_data, get_zeniva_platform_stats, histogram_data, get_comparison_stats, filtering_data_for_graph_exarta, filtering_data_for_graph_odyessey, filtering_data_for_graph_zeniva, plot_histograms
 st.set_page_config(layout='wide')
 
-youtube_data, meta_data, ppc_data = get_platform_data()
-data = pd.read_csv('./data/cleaned_sample_random.csv')
+data = pd.read_csv('./data/graph_data.csv')
 
-def plot_platform_metrics(platform_name):
-    # Extract relevant data for the given platform
-    plot_data = data[['Metric', platform_name]].copy()
-    
-    # Rename the columns for ease of use
-    plot_data.columns = ['Metric', 'Value']
-    
-    # Create a bar plot using Plotly Express
-    fig = px.bar(plot_data,
-                 x='Metric',
-                 y='Value',
-                 title=f'{platform_name} Metrics',
-                 labels={'Value': 'Metric Value', 'Metric': 'Metric Type'})
-    
-    return fig
+# youtube_data, meta_data, ppc_data = get_platform_data()
+# youtube_data_zeniva, meta_data_zeniva, ppc_data_zeniva, linkedin_data_zeniva, x_data_zeniva, shopify_data_zeniva = filtering_data_for_graph_zeniva(data_for_graph)
+# youtube_data_ody, meta_data_ody, ppc_data_ody, linkedin_data_ody, x_data_ody, shopify_data_ody = filtering_data_for_graph_odyessey(data_for_graph)
+# youtube_data_exarta, meta_data_exarta, ppc_data_exarta, linkedin_data_exarta, x_data_exarta, shopify_data_exarta = filtering_data_for_graph_exarta(data_for_graph)
+
+# Define custom color mapping for the metrics
+color_discrete_map = {
+    'clicks': 'red',
+    'views': 'orange',
+    'daily_spend': 'green'
+}
 
 zen_col, ody_col, exa_col, comp_col = st.columns(4)
 with zen_col:
@@ -42,9 +37,9 @@ with comp_col:
 if zen_btn:
     placeholder = st.empty()
     with placeholder.container():
-        col4, col5, col15 = st.columns(3)
-        col13, col14, col16 = st.columns(3)
-        with col4:
+        col1, col2, col3 = st.columns(3)
+        col4, col5, col6 = st.columns(3)
+        with col1:
             st.header("Youtube")
             df = pd.read_csv("./data/zeniva_social.csv")
             total_followers_youtube = df[df["platform"] == "youtube"]["total_followers"].sum()
@@ -56,227 +51,250 @@ if zen_btn:
             st.write(f"Today follwers : {today_followers_youtube}")
             st.write(f"Yesterday followers : {yesterday_followers_youtube}")
         
-    with col5:
-        st.header("Meta")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_meta = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_meta = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_meta = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+        with col2:
+            st.header("Meta")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_meta = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_meta = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_meta = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total followers : {total_followers_meta}")
+            st.write(f"Today followers : {today_followers_meta}")
+            st.write(f"Yesterday followers : {yesterday_followers_meta}")
         
-        st.write(f"Total followers : {total_followers_meta}")
-        st.write(f"Today followers : {today_followers_meta}")
-        st.write(f"Yesterday followers : {yesterday_followers_meta}")
-    
-    with col15:
-        st.header("LinkedIn")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_link = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_link = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_link = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total followers : {total_followers_link}")
-        st.write(f"Today followers : {today_followers_link}")
-        st.write(f"Yesterday followers : {yesterday_followers_link}")
-         
-    with col13:
-        st.header("PPC")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_pcc = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_pcc = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_pcc = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total follwers : {total_followers_pcc}")
-        st.write(f"Today follwers : {today_followers_pcc}")
-        st.write(f"Yesterday follwers : {yesterday_followers_pcc}")
-        
-    with col14:
-        st.header("Shopify Ads")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_shop = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_shop = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_shop = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total follwers : {total_followers_shop}")
-        st.write(f"Today follwers : {today_followers_shop}")
-        st.write(f"Yesterday follwers : {yesterday_followers_shop}")
-    with col16:
-        st.header("X")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_x = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_x = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_x = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total followers : {total_followers_x}")
-        st.write(f"Today followers : {today_followers_x}")
-        st.write(f"Yesterday follwers : {yesterday_followers_x}")
+        with col3:
+            st.header("LinkedIn")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_link = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_link = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_link = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total followers : {total_followers_link}")
+            st.write(f"Today followers : {today_followers_link}")
+            st.write(f"Yesterday followers : {yesterday_followers_link}")
+            
+        with col4:
+            st.header("PPC")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_pcc = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_pcc = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_pcc = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total follwers : {total_followers_pcc}")
+            st.write(f"Today follwers : {today_followers_pcc}")
+            st.write(f"Yesterday followers : {yesterday_followers_pcc}")
+            
+        with col5:
+            st.header("Shopify Ads")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_shop = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_shop = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_shop = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total follwers : {total_followers_shop}")
+            st.write(f"Today follwers : {today_followers_shop}")
+            st.write(f"Yesterday followers : {yesterday_followers_shop}")
+        with col6:
+            st.header("X")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_x = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_x = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_x = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total followers : {total_followers_x}")
+            st.write(f"Today followers : {today_followers_x}")
+            st.write(f"Yesterday followers : {yesterday_followers_x}")
 
-    time.sleep(60)
+    time.sleep(10)
     placeholder.empty()
+    col7, col8, col9 = st.columns(3)
+    col10, col11, col12 = st.columns(3)
     
-    # Metrics available in the dataset
-    metrics = data['Metric'].unique()
+    with col7:
+        plot_histograms('zeniva', 'youtube', data)
+    with col8:
+        plot_histograms('zeniva', 'meta', data)
+    with col9:
+        plot_histograms('zeniva', 'linkedin', data)
+    with col10:
+       plot_histograms('zeniva', 'ppc', data)
+    with col11:
+       plot_histograms('zeniva', 'shopify', data)
+    with col12:
+       plot_histograms('zeniva', 'x', data)
 
-    # Create columns in the Streamlit app
-    col1, col2 = st.columns(2)
-    col3, col4 = st.columns(2)
-
-    # Display the plots in the respective columns
-    with col1:
-        st.plotly_chart(plot_platform_metrics('YouTube'))  # Plot metrics for YouTube
-
-    with col2:
-        st.plotly_chart(plot_platform_metrics('Meta'))  # Plot metrics for Meta
-
-    with col3:
-        st.plotly_chart(plot_platform_metrics('PPC'))  # Plot metrics for PPC
-
-    with col4:
-        st.plotly_chart(plot_platform_metrics('Shopify'))  # Plot metrics for Shopify Ads
-    placeholder.empty()
         
 if ody_btn:
     placeholder = st.empty()
-    st.title("Odyessey stats accross all platforms")
-    col1, col2, col3 = st.columns(3)
-    col4, col5, col6 = st.columns(3)
+    with placeholder.container():
+        st.title("Odyessey stats accross all platforms")
+        col1, col2, col3 = st.columns(3)
+        col4, col5, col6 = st.columns(3)
 
-    with col1:
-        st.header("Youtube")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_youtube1 = df[df["platform"] == "youtube"]["total_followers"].sum()
-        today_followers_youtube1 = df[df["platform"] == "youtube"]["today_followers"].sum()
-        yesterday_followers_youtube1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total follwers : {total_followers_youtube1}")
-        st.write(f"Today follwers : {today_followers_youtube1}")
-        st.write(f"Yesterday follwers : {yesterday_followers_youtube1}")
-        
-    with col2:
-        st.header("Meta")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_meta1 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_meta1 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_meta1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total follwers : {total_followers_meta1}")
-        st.write(f"Today follwers : {today_followers_meta1}")
-        st.write(f"Yesterday follwers : {yesterday_followers_meta1}")
+        with col1:
+            st.header("Youtube")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_youtube1 = df[df["platform"] == "youtube"]["total_followers"].sum()
+            today_followers_youtube1 = df[df["platform"] == "youtube"]["today_followers"].sum()
+            yesterday_followers_youtube1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total follwers : {total_followers_youtube1}")
+            st.write(f"Today follwers : {today_followers_youtube1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_youtube1}")
+            
+        with col2:
+            st.header("Meta")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_meta1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_meta1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_meta1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total follwers : {total_followers_meta1}")
+            st.write(f"Today follwers : {today_followers_meta1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_meta1}")
 
-    with col3:
-        st.header("PPC")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_ppc1 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_ppc1 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_ppc1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+        with col3:
+            st.header("PPC")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_ppc1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_ppc1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_ppc1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
 
-        st.write(f"Total follwers : {total_followers_ppc1}")
-        st.write(f"Today follwers : {today_followers_ppc1}")
-        st.write(f"Yesterday follwers : {yesterday_followers_ppc1}")
-        
-    with col4:
-        st.header("Shopify Ads")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_shop1 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_shop1 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_shop1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            st.write(f"Total follwers : {total_followers_ppc1}")
+            st.write(f"Today follwers : {today_followers_ppc1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_ppc1}")
+            
+        with col4:
+            st.header("Shopify Ads")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_shop1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_shop1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_shop1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
 
-        st.write(f"Total follwers : {total_followers_shop1}")
-        st.write(f"Today follwers : {today_followers_shop1}")
-        st.write(f"Yesterday follwers : {yesterday_followers_shop1}")
+            st.write(f"Total follwers : {total_followers_shop1}")
+            st.write(f"Today follwers : {today_followers_shop1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_shop1}")
 
-    with col5:
-        st.header("X")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_x1 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_x1 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_x1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total followers : {total_followers_x1}")
-        st.write(f"Today followers : {today_followers_x1}")
-        st.write(f"Today followers : {yesterday_followers_x1}")
-        
-    with col6:
-        pass
-    placeholder = st.empty()
-
+        with col5:
+            st.header("X")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_x1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_x1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_x1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total followers : {total_followers_x1}")
+            st.write(f"Today followers : {today_followers_x1}")
+            st.write(f"Today followers : {yesterday_followers_x1}")
+            
+        with col6:
+            pass
+    time.sleep(10)
+    placeholder.empty()
+    
+    col7, col8, col9 = st.columns(3)
+    col10, col11, col12 = st.columns(3)
+    with col7:
+        plot_histograms('odyessey', 'youtube', data)
+    with col8:
+        plot_histograms('odyessey', 'meta', data)
+    with col9:
+        plot_histograms('odyessey', 'linkedin', data)
+    with col10:
+       plot_histograms('odyessey', 'ppc', data)
+    with col11:
+       plot_histograms('odyessey', 'shopify', data)
+    with col12:
+       plot_histograms('odyessey', 'x', data)
+    
+    time.sleep(1)
+    placeholder.empty()
+    
+    
 if exa_btn:
     placeholder = st.empty()
-    st.title("Exarta stats accross all platforms")
-    col11, col12, col6 = st.columns(3)
-    col13, col14 , col7= st.columns(3)
+    with placeholder.container():
+        st.title("Odyessey stats accross all platforms")
+        col1, col2, col3 = st.columns(3)
+        col4, col5, col6 = st.columns(3)
+
+        with col1:
+            st.header("Youtube")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_youtube1 = df[df["platform"] == "youtube"]["total_followers"].sum()
+            today_followers_youtube1 = df[df["platform"] == "youtube"]["today_followers"].sum()
+            yesterday_followers_youtube1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total follwers : {total_followers_youtube1}")
+            st.write(f"Today follwers : {today_followers_youtube1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_youtube1}")
+            
+        with col2:
+            st.header("Meta")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_meta1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_meta1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_meta1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total follwers : {total_followers_meta1}")
+            st.write(f"Today follwers : {today_followers_meta1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_meta1}")
+
+        with col3:
+            st.header("PPC")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_ppc1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_ppc1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_ppc1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+
+            st.write(f"Total follwers : {total_followers_ppc1}")
+            st.write(f"Today follwers : {today_followers_ppc1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_ppc1}")
+            
+        with col4:
+            st.header("Shopify Ads")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_shop1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_shop1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_shop1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+
+            st.write(f"Total follwers : {total_followers_shop1}")
+            st.write(f"Today follwers : {today_followers_shop1}")
+            st.write(f"Yesterday follwers : {yesterday_followers_shop1}")
+
+        with col5:
+            st.header("X")
+            df = pd.read_csv("./data/zeniva_social.csv")
+            total_followers_x1 = df[df["platform"] == "meta"]["total_followers"].sum()
+            today_followers_x1 = df[df["platform"] == "meta"]["today_followers"].sum()
+            yesterday_followers_x1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
+            
+            st.write(f"Total followers : {total_followers_x1}")
+            st.write(f"Today followers : {today_followers_x1}")
+            st.write(f"Today followers : {yesterday_followers_x1}")
+            
+        with col6:
+            pass
+        
+    time.sleep(10)
+    placeholder.empty()
     
-    
-    with col11:
-        st.header("Youtube")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_youtube2 = df[df["platform"] == "youtube"]["total_followers"].sum()
-        today_followers_youtube2 = df[df["platform"] == "youtube"]["today_followers"].sum()
-        yesterday_followers_youtube2 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        
-        st.write(f"Total follwers : {total_followers_youtube2}")
-        st.write(f"Today follwers : {today_followers_youtube2}")
-        st.write(f"Yesterday follwers : {yesterday_followers_youtube2}")
-        
-    with col12:
-        st.header("Meta")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_meta2 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_meta2 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_meta2 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total follwers : {total_followers_meta2}")
-        st.write(f"Today follwers : {today_followers_meta2}")
-        st.write(f"Yesterday follwers : {yesterday_followers_meta2}")
-        
-        
-        
-    with col6:
-        st.header("X")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_x2 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_x2 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_x2 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-        
-        st.write(f"Total followers : {total_followers_x2}")
-        st.write(f"Today followers : {today_followers_x2}")
-        st.write(f"Yesterday follwers : {yesterday_followers_x2}")    
-        
-    with col13:
-        st.header("PPC")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_ppc2 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_ppc2 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_ppc2 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-       
-        st.write(f"Total follwers : {total_followers_ppc2}")
-        st.write(f"Today follwers : {today_followers_ppc2}")
-        st.write(f"Yesterday follwers : {yesterday_followers_ppc2}")
-        
-    with col14:
-        st.header("Shopify Ads")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_shop2 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_shop2 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_shop2 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-      
-        
-        st.write(f"Total follwers : {total_followers_shop2}")
-        st.write(f"Today follwers : {today_followers_shop2}")
-        st.write(f"Today follwers : {yesterday_followers_shop2}")
-        
+    col7, col8, col9 = st.columns(3)
+    col10, col11, col12 = st.columns(3)
     with col7:
-        st.header("LinkedIn")
-        df = pd.read_csv("./data/zeniva_social.csv")
-        total_followers_link2 = df[df["platform"] == "meta"]["total_followers"].sum()
-        today_followers_link2 = df[df["platform"] == "meta"]["today_followers"].sum()
-        yesterday_followers_link2 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
-      
-        
-        st.write(f"Total followers : {total_followers_link2}")
-        st.write(f"Today followers : {today_followers_link2}")
-        st.write(f"Yesterday followers : {yesterday_followers_link2}")
-    placeholder = st.empty()    
+        plot_histograms('exarta', 'youtube', data)
+    with col8:
+        plot_histograms('exarta', 'meta', data)
+    with col9:
+        plot_histograms('exarta', 'linkedin', data)
+    with col10:
+       plot_histograms('exarta', 'ppc', data)
+    with col11:
+       plot_histograms('exarta', 'shopify', data)
+    with col12:
+       plot_histograms('exarta', 'x', data)
+    
+    time.sleep(1)
+    placeholder.empty()
 
 if comp_btn:
     placeholder = st.empty()

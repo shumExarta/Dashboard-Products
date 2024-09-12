@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+import streamlit as st
 
 def histogram_data():
     data = pd.read_csv('./data/cleaned_sample_random.csv')
@@ -76,19 +77,104 @@ def get_comparison_stats(dataframe):
     return zeniva_summed_metrics, ody_summed_metrics
 
 
-# Function to plot metrics for each platform using Plotly
-def plot_platform_metrics(platform_name):
-    # Extract relevant data for the given platform
-    plot_data = data[['Metric', platform_name]].copy()
+def filtering_data_for_graph_zeniva(dataframe):
+    # FOR ZENIVA
+    filter_product_exarta = dataframe[dataframe['product'] == 'zeniva']
     
-    # Rename the columns for ease of use
-    plot_data.columns = ['Metric', 'Value']
+    # FOR ZENIVA YOUTUBE
+    filter_youtube_zeniva = filter_product_exarta[filter_product_exarta['platform'] == 'youtube']
+    youtube_melted = filter_youtube_zeniva.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ZENIVA META
+    filter_meta_zeniva = filter_product_exarta[filter_product_exarta['platform'] == 'meta']
+    meta_melted = filter_meta_zeniva.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ZENIVA PPC
+    filter_ppc_zeniva = filter_product_exarta[filter_product_exarta['platform'] == 'ppc']
+    ppc_melted = filter_ppc_zeniva.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ZENIVA LINKEDIN
+    filter_linkedin_zeniva = filter_product_exarta[filter_product_exarta['platform'] == 'linkedin']
+    linkedin_melted = filter_linkedin_zeniva.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ZENVIA X
+    filter_X_zeniva = filter_product_exarta[filter_product_exarta['platform'] == 'x']
+    x_melted = filter_X_zeniva.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ZENIVA SHOPIFY
+    filter_shopify_zeniva = filter_product_exarta[filter_product_exarta['platform'] == 'shopify']
+    shopify_melted = filter_shopify_zeniva.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
     
-    # Create a bar plot using Plotly Express
-    fig = px.bar(plot_data,
-                 x='Metric',
-                 y='Value',
-                 title=f'{platform_name} Metrics',
-                 labels={'Value': 'Metric Value', 'Metric': 'Metric Type'})
+    return youtube_melted, meta_melted, ppc_melted, linkedin_melted, x_melted, shopify_melted
+
+
+def filtering_data_for_graph_odyessey(dataframe):
+    # FOR EXARTA
+    filter_product_exarta = dataframe[dataframe['product'] == 'odyessey']
     
-    return figg
+    # FOR ODY YOUTUBE
+    filter_youtube_ody = filter_product_exarta[filter_product_exarta['platform'] == 'youtube']
+    youtube_melted = filter_youtube_ody.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ODY META
+    filter_meta_ody = filter_product_exarta[filter_product_exarta['platform'] == 'meta']
+    meta_melted = filter_meta_ody.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ODY PPC
+    filter_ppc_ody = filter_product_exarta[filter_product_exarta['platform'] == 'ppc']
+    ppc_melted = filter_ppc_ody.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ODY LINKEDIN
+    filter_linkedin_ody = filter_product_exarta[filter_product_exarta['platform'] == 'linkedin']
+    linkedin_melted = filter_linkedin_ody.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ODY X
+    filter_X_ody = filter_product_exarta[filter_product_exarta['platform'] == 'x']
+    x_melted = filter_X_ody.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR ODY SHOPIFY
+    filter_shopify_ody = filter_product_exarta[filter_product_exarta['platform'] == 'shopify']
+    shopify_melted = filter_shopify_ody.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    
+    return youtube_melted, meta_melted, ppc_melted, linkedin_melted, shopify_melted, x_melted
+
+
+def filtering_data_for_graph_exarta(dataframe):
+    # FOR EXARTA
+    filter_product_exarta = dataframe[dataframe['product'] == 'exarta']
+    
+    # FOR EXARTA YOUTUBE
+    filter_youtube_exarta = filter_product_exarta[filter_product_exarta['platform'] == 'youtube']
+    youtube_melted = filter_youtube_exarta.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR EXARTA META
+    filter_meta_exarta = filter_product_exarta[filter_product_exarta['platform'] == 'meta']
+    meta_melted = filter_meta_exarta.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR EXARTA PPC
+    filter_ppc_exarta = filter_product_exarta[filter_product_exarta['platform'] == 'ppc']
+    ppc_melted = filter_ppc_exarta.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR EXARTA LINKEDIN
+    filter_linkedin_exarta = filter_product_exarta[filter_product_exarta['platform'] == 'linkedin']
+    linkedin_melted = filter_linkedin_exarta.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR EXARTA X
+    filter_X_exarta = filter_product_exarta[filter_product_exarta['platform'] == 'x']
+    x_melted = filter_X_exarta.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    # FOR EXARTA SHOPIFY
+    filter_shopify_exarta = filter_product_exarta[filter_product_exarta['platform'] == 'shopify']
+    shopify_melted = filter_shopify_exarta.melt(id_vars=['date'], value_vars=['views', 'clicks', 'daily_spend'], var_name='metric', value_name='value')
+    
+    return youtube_melted, meta_melted, ppc_melted, linkedin_melted, x_melted, shopify_melted
+
+
+def plot_histograms(product_name, platform_name, df):
+    df = df[df['product'] == product_name]
+    df_platform = df[df['platform'] == platform_name] 
+    df_grouped = df_platform[['date', 'clicks', 'views', 'daily_spend']].melt(id_vars='date', var_name='Metric', value_name='Value')
+ 
+    color_discrete_map = {
+        'clicks': 'red',
+        'views': 'orange',
+        'daily_spend': 'green'
+    }
+ 
+    fig = px.histogram(df_grouped, 
+                       x='date', 
+                       y='Value', 
+                       color='Metric', 
+                       barmode='group', 
+                       title=f'{platform_name.capitalize()} Metrics',
+                       height=400,  # Set a custom height for the histogram
+                       width=400,   # Set a smaller width for the histogram
+                       color_discrete_map=color_discrete_map)  # Set custom colors
+ 
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
