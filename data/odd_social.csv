@@ -1,13 +1,13 @@
-product,platform,daily_installs,clicks,daily_spend,views,reach,per_day_cost,impressions
-Odyssey,shopify_ads,322,300,851,0,0,0,0
-Odyssey,shopify_ads,588,230,566,0,0,0,0
-Odyssey,shopify_ads,851,789,982,0,0,0,0
-Odyssey,youtube Ad,0,553,767,640,0,0,0
-Odyssey,youtube Ad,0,654,465,81,0,0,0
-Odyssey,youtube Ad,0,765,223,361,0,0,0
-Odyssey,meta,0,830,0,0,739,188,0
-Odyssey,meta,0,648,0,0,455,641,0
-Odyssey,meta,0,600,0,0,138,361,0
-Odyssey,PCC,0,189,447,0,0,0,111
-Odyssey,PCC,0,894,895,0,0,0,24
-Odyssey,PCC,0,424,548,0,0,0,247
+product,platform,daily_installs,clicks,daily_spend,views,reach,per_day_cost,impressions,total_followers,today_followers,yesterday_follwers
+Odyssey,shopify_ads,322,300,851,0,0,0,0,531,800,188
+Odyssey,shopify_ads,588,230,566,0,0,0,0,80,553,917
+Odyssey,shopify_ads,851,789,982,0,0,0,0,689,882,853
+Odyssey,youtube,0,553,767,640,0,0,0,168,853,44
+Odyssey,youtube,0,654,465,81,0,0,0,972,7,258
+Odyssey,youtube,0,765,223,361,0,0,0,477,633,37
+Odyssey,meta,0,830,0,0,739,188,0,633,534,891
+Odyssey,meta,0,648,0,0,455,641,0,633,121,749
+Odyssey,meta,0,600,0,0,138,361,0,429,681,811
+Odyssey,PCC,0,189,447,0,0,0,111,341,991,871
+Odyssey,PCC,0,894,895,0,0,0,24,432,34,209
+Odyssey,PCC,0,424,548,0,0,0,247,435,139,773
