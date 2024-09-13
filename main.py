@@ -4,22 +4,16 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 import time
 import random
-from functions import get_platform_data, get_zeniva_platform_stats, histogram_data, get_comparison_stats, filtering_data_for_graph_exarta, filtering_data_for_graph_odyessey, filtering_data_for_graph_zeniva, plot_histograms
+from functions import get_platform_data, get_zeniva_platform_stats, histogram_data, get_comparison_stats, filtering_data_for_graph_exarta, filtering_data_for_graph_odyessey, filtering_data_for_graph_zeniva, plot_histograms_zeniva
 st.set_page_config(layout='wide')
 
-data = pd.read_csv('./data/graph_data.csv')
+df = pd.read_csv('./data/graph_data_final.csv')
+data = df.fillna(0)
 
 # youtube_data, meta_data, ppc_data = get_platform_data()
 # youtube_data_zeniva, meta_data_zeniva, ppc_data_zeniva, linkedin_data_zeniva, x_data_zeniva, shopify_data_zeniva = filtering_data_for_graph_zeniva(data_for_graph)
 # youtube_data_ody, meta_data_ody, ppc_data_ody, linkedin_data_ody, x_data_ody, shopify_data_ody = filtering_data_for_graph_odyessey(data_for_graph)
 # youtube_data_exarta, meta_data_exarta, ppc_data_exarta, linkedin_data_exarta, x_data_exarta, shopify_data_exarta = filtering_data_for_graph_exarta(data_for_graph)
-
-# Define custom color mapping for the metrics
-color_discrete_map = {
-    'clicks': 'red',
-    'views': 'orange',
-    'daily_spend': 'green'
-}
 
 zen_col, ody_col, exa_col, comp_col = st.columns(4)
 with zen_col:
@@ -47,8 +41,8 @@ if zen_btn:
             yesterday_followers_youtube = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
             
-            st.write(f"Total follwers : {total_followers_youtube}")
-            st.write(f"Today follwers : {today_followers_youtube}")
+            st.write(f"Total followers : {total_followers_youtube}")
+            st.write(f"Today followers : {today_followers_youtube}")
             st.write(f"Yesterday followers : {yesterday_followers_youtube}")
         
         with col2:
@@ -80,8 +74,8 @@ if zen_btn:
             today_followers_pcc = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_pcc = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
-            st.write(f"Total follwers : {total_followers_pcc}")
-            st.write(f"Today follwers : {today_followers_pcc}")
+            st.write(f"Total followers : {total_followers_pcc}")
+            st.write(f"Today followers : {today_followers_pcc}")
             st.write(f"Yesterday followers : {yesterday_followers_pcc}")
             
         with col5:
@@ -91,8 +85,8 @@ if zen_btn:
             today_followers_shop = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_shop = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
-            st.write(f"Total follwers : {total_followers_shop}")
-            st.write(f"Today follwers : {today_followers_shop}")
+            st.write(f"Total followers : {total_followers_shop}")
+            st.write(f"Today followers : {today_followers_shop}")
             st.write(f"Yesterday followers : {yesterday_followers_shop}")
         with col6:
             st.header("X")
@@ -105,23 +99,17 @@ if zen_btn:
             st.write(f"Today followers : {today_followers_x}")
             st.write(f"Yesterday followers : {yesterday_followers_x}")
 
-    time.sleep(10)
+    time.sleep(1)
     placeholder.empty()
     col7, col8, col9 = st.columns(3)
-    col10, col11, col12 = st.columns(3)
+    col10, col11 = st.columns(2)
     
     with col7:
-        plot_histograms('zeniva', 'youtube', data)
+        plot_histograms_zeniva('zeniva', 'youtube', data)
     with col8:
-        plot_histograms('zeniva', 'meta', data)
+        plot_histograms_zeniva('zeniva', 'meta', data)
     with col9:
-        plot_histograms('zeniva', 'linkedin', data)
-    with col10:
-       plot_histograms('zeniva', 'ppc', data)
-    with col11:
-       plot_histograms('zeniva', 'shopify', data)
-    with col12:
-       plot_histograms('zeniva', 'x', data)
+        plot_histograms_zeniva('zeniva', 'shopify', data)
 
         
 if ody_btn:
@@ -138,9 +126,9 @@ if ody_btn:
             today_followers_youtube1 = df[df["platform"] == "youtube"]["today_followers"].sum()
             yesterday_followers_youtube1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
-            st.write(f"Total follwers : {total_followers_youtube1}")
-            st.write(f"Today follwers : {today_followers_youtube1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_youtube1}")
+            st.write(f"Total followers : {total_followers_youtube1}")
+            st.write(f"Today followers : {today_followers_youtube1}")
+            st.write(f"Yesterday followers : {yesterday_followers_youtube1}")
             
         with col2:
             st.header("Meta")
@@ -149,9 +137,9 @@ if ody_btn:
             today_followers_meta1 = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_meta1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
-            st.write(f"Total follwers : {total_followers_meta1}")
-            st.write(f"Today follwers : {today_followers_meta1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_meta1}")
+            st.write(f"Total followers : {total_followers_meta1}")
+            st.write(f"Today followers : {today_followers_meta1}")
+            st.write(f"Yesterday followers : {yesterday_followers_meta1}")
 
         with col3:
             st.header("PPC")
@@ -160,9 +148,9 @@ if ody_btn:
             today_followers_ppc1 = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_ppc1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
 
-            st.write(f"Total follwers : {total_followers_ppc1}")
-            st.write(f"Today follwers : {today_followers_ppc1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_ppc1}")
+            st.write(f"Total followers : {total_followers_ppc1}")
+            st.write(f"Today followers : {today_followers_ppc1}")
+            st.write(f"Yesterday followers : {yesterday_followers_ppc1}")
             
         with col4:
             st.header("Shopify Ads")
@@ -171,9 +159,9 @@ if ody_btn:
             today_followers_shop1 = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_shop1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
 
-            st.write(f"Total follwers : {total_followers_shop1}")
-            st.write(f"Today follwers : {today_followers_shop1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_shop1}")
+            st.write(f"Total followers : {total_followers_shop1}")
+            st.write(f"Today followers : {today_followers_shop1}")
+            st.write(f"Yesterday followers : {yesterday_followers_shop1}")
 
         with col5:
             st.header("X")
@@ -224,9 +212,9 @@ if exa_btn:
             today_followers_youtube1 = df[df["platform"] == "youtube"]["today_followers"].sum()
             yesterday_followers_youtube1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
-            st.write(f"Total follwers : {total_followers_youtube1}")
-            st.write(f"Today follwers : {today_followers_youtube1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_youtube1}")
+            st.write(f"Total followers : {total_followers_youtube1}")
+            st.write(f"Today followers : {today_followers_youtube1}")
+            st.write(f"Yesterday followers : {yesterday_followers_youtube1}")
             
         with col2:
             st.header("Meta")
@@ -235,9 +223,9 @@ if exa_btn:
             today_followers_meta1 = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_meta1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
             
-            st.write(f"Total follwers : {total_followers_meta1}")
-            st.write(f"Today follwers : {today_followers_meta1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_meta1}")
+            st.write(f"Total followers : {total_followers_meta1}")
+            st.write(f"Today followers : {today_followers_meta1}")
+            st.write(f"Yesterday followers : {yesterday_followers_meta1}")
 
         with col3:
             st.header("PPC")
@@ -246,9 +234,9 @@ if exa_btn:
             today_followers_ppc1 = df[df["platform"] == "meta"]["today_followers"].sum()
             yesterday_followers_ppc1 = df[df["platform"] == "youtube"]["yesterday_follwers"].sum()
 
-            st.write(f"Total follwers : {total_followers_ppc1}")
-            st.write(f"Today follwers : {today_followers_ppc1}")
-            st.write(f"Yesterday follwers : {yesterday_followers_ppc1}")
+            st.write(f"Total followers : {total_followers_ppc1}")
+            st.write(f"Today followers : {today_followers_ppc1}")
+            st.write(f"Yesterday followers : {yesterday_followers_ppc1}")
             
         with col4:
             st.header("Shopify Ads")
@@ -296,9 +284,10 @@ if exa_btn:
     time.sleep(1)
     placeholder.empty()
 
+
 if comp_btn:
     placeholder = st.empty()
-    st.title("Zeniva Vs Odyssey")
+    st.title("Overall stats")
     comparison_df = pd.read_csv("./data/comparisons.csv")
     zeniva_stats, ody_stats = get_comparison_stats(comparison_df)
     zen_col, ody_col = st.columns(2)
@@ -316,65 +305,3 @@ if comp_btn:
         st.metric("Paid Users", ody_stats['paid_users'])
         st.metric("Today Uninstalls", ody_stats['today_uninstalls'])
         st.metric("Total Uninstalls", ody_stats['total_uninstalls'])
-
- 
-# # Load the data
-# file_path = 'cleaned_sample_random.xlsx'
-# data = pd.read_excel(file_path)
- 
-# # Clean and restructure the data
-# data.columns = ['Platform', 'Metric', 'YouTube', 'Meta', 'PPC', 'Shopify']
-# data.dropna(inplace=True)  # Remove rows with NaN values
- 
-# # Separate data for each platform
-# platform1_data = data.iloc[0:3, 2:6].reset_index(drop=True)
-# platform2_data = data.iloc[3:6, 2:6].reset_index(drop=True)
-# platform3_data = data.iloc[6:9, 2:6].reset_index(drop=True)
- 
-# # Streamlit app
-# st.title("Social Media Platform Metrics")
- 
-# # Function to plot metrics for each platform using Plotly
-# def plot_metrics(platform_data, platform_number):
-#     # Prepare the data for Plotly
-#     metrics = ['views', 'clicks', 'daily spend']
-#     social_media_platforms = ['YouTube', 'Meta', 'PPC', 'Shopify']
-   
-#     # Create a new dataframe for plotting
-#     plot_data = []
-#     for i, metric in enumerate(metrics):
-#         for sm_platform in social_media_platforms:
-#             plot_data.append({
-#                 'Metric': metric,
-#                 'Social Media Platform': sm_platform,
-#                 'Value': platform_data.iloc[i][sm_platform]
-#             })
-   
-#     plot_df = pd.DataFrame(plot_data)
-   
-#     # Create a bar plot using Plotly Express
-#     fig = px.bar(plot_df,
-#                  x='Metric',
-#                  y='Value',
-#                  color='Social Media Platform',
-#                  barmode='group',
-#                  title=f'Platform {platform_number} Metrics')
-   
-#     return fig
- 
-# # Create two rows, each row with two columns
-# col1, col2 = st.columns(2)
-# col3, col4 = st.columns(2)
- 
-# # Display the plots in the respective columns
-# with col1:
-#     st.plotly_chart(plot_metrics(platform1_data, 1))
- 
-# with col2:
-#     st.plotly_chart(plot_metrics(platform2_data, 2))
- 
-# with col3:
-#     st.plotly_chart(plot_metrics(platform3_data, 3))
- 
-# with col4:
-#     st.write("More visualizations can be added here")

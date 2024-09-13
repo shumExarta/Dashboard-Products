@@ -155,26 +155,43 @@ def filtering_data_for_graph_exarta(dataframe):
     return youtube_melted, meta_melted, ppc_melted, linkedin_melted, x_melted, shopify_melted
 
 
-def plot_histograms(product_name, platform_name, df):
+def plot_histograms_zeniva(product_name, platform_name, df):
     df = df[df['product'] == product_name]
+    
+    platform_metrics = {
+        'youtube': ['clicks', 'views', 'daily_spend'],
+        'meta': ['clicks', 'reach', 'daily_spend'],
+        'shopify': ['clicks', 'daily_spend']
+    }
+    
+    if platform_name in platform_metrics:
+        selected_metrics = platform_metrics[platform_name]
+    else:
+        st.error(f"Platform {platform_name} not recognised.")
+        return
+    
     df_platform = df[df['platform'] == platform_name] 
-    df_grouped = df_platform[['date', 'clicks', 'views', 'daily_spend']].melt(id_vars='date', var_name='Metric', value_name='Value')
- 
+    # df_grouped = df_platform[['date', 'clicks', 'views', 'daily_spend']].melt(id_vars='date', var_name='Metric', value_name='Value')
+    df_grouped = df_platform[['date'] + selected_metrics].melt(id_vars='date', var_name='Metric', value_name='Value')
+    
     color_discrete_map = {
         'clicks': 'red',
         'views': 'orange',
-        'daily_spend': 'green'
+        'daily_spend': 'green',
+        'reach': 'blue'
     }
  
-    fig = px.histogram(df_grouped, 
-                       x='date', 
-                       y='Value', 
-                       color='Metric', 
-                       barmode='group', 
-                       title=f'{platform_name.capitalize()} Metrics',
-                       height=400,  # Set a custom height for the histogram
-                       width=400,   # Set a smaller width for the histogram
-                       color_discrete_map=color_discrete_map)  # Set custom colors
+    fig = px.histogram(
+        df_grouped, 
+        x='date', 
+        y='Value', 
+        color='Metric', 
+        barmode='group', 
+        title=f'{platform_name.capitalize()} Metrics',
+        height=450,
+        width=450,
+        color_discrete_map=color_discrete_map,
+        )
  
     # Display the figure in Streamlit
     st.plotly_chart(fig)
