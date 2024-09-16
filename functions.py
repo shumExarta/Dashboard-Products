@@ -154,14 +154,131 @@ def filtering_data_for_graph_exarta(dataframe):
     
     return youtube_melted, meta_melted, ppc_melted, linkedin_melted, x_melted, shopify_melted
 
-
+# histogram for zeniva
 def plot_histograms_zeniva(product_name, platform_name, df):
     df = df[df['product'] == product_name]
     
     platform_metrics = {
         'youtube': ['clicks', 'views', 'daily_spend'],
         'meta': ['clicks', 'reach', 'daily_spend'],
-        'shopify': ['clicks', 'daily_spend']
+        'shopify': ['clicks', 'daily_spend'], 
+        'ppc': ['clicks', 'daily_spend', 'views'],
+    }
+    
+    if platform_name in platform_metrics:
+        selected_metrics = platform_metrics[platform_name]
+    else:
+        st.error(f"Platform {platform_name} not recognised.")
+        return
+    
+    df_platform = df[df['platform'] == platform_name]
+    df_grouped = df_platform[['date'] + selected_metrics].melt(id_vars='date', var_name='Metric', value_name='Value')
+    
+    color_discrete_map = {
+        'clicks': 'red',
+        'views': 'orange',
+        'daily_spend': 'green',
+        'reach': 'blue'
+    }
+ 
+    fig = px.histogram(
+        df_grouped, 
+        x='date', 
+        y='Value', 
+        color='Metric', 
+        barmode='group', 
+        title=f'{platform_name.capitalize()} ',
+        height=450,
+        width=450,
+        color_discrete_map=color_discrete_map,
+    )
+    
+    fig.update_layout(
+        legend={
+            'orientation': 'h', 
+            'yanchor': 'bottom', 
+            'y': -0.3,  
+            'xanchor': 'center',
+            'x': 0.5,    
+        },
+        xaxis_title=None, 
+        yaxis_title=None,
+        legend_title_text='',  
+        
+    )
+    
+    st.plotly_chart(fig)
+
+# histogram for odyessey  
+def plot_histograms_odyessey(product_name, platform_name, df):
+    df = df[df['product'] == product_name]
+    
+    platform_metrics = {
+        'youtube': ['clicks', 'views', 'daily_spend'],
+        'meta': ['clicks', 'reach', 'daily_spend'],
+        'shopify': ['clicks', 'daily_spend'], 
+        'ppc': ['clicks', 'daily_spend', 'views'],
+        'x': ['clicks', 'daily_spend', 'views'],
+       
+    }
+    
+    if platform_name in platform_metrics:
+        selected_metrics = platform_metrics[platform_name]
+    else:
+        st.error(f"Platform {platform_name} not recognised.")
+        return
+    
+    df_platform = df[df['platform'] == platform_name] 
+    df_grouped = df_platform[['date'] + selected_metrics].melt(id_vars='date', var_name='Metric', value_name='Value')
+    
+    color_discrete_map = {
+        'clicks': '#BC679C',
+        'views': '#F68C5B',
+        'daily_spend': '#A6B174',
+        'reach': '#BC679C'
+    }
+ 
+    fig = px.histogram(
+        df_grouped, 
+        x='date', 
+        y='Value', 
+        color='Metric', 
+        barmode='group', 
+        
+        title=f'{platform_name.capitalize()} ',
+        height=450,
+        width=450,
+        color_discrete_map=color_discrete_map,
+        )
+    
+    fig.update_layout(
+    legend={
+        'orientation': 'h', 
+        'yanchor': 'bottom', 
+        'y': -0.3,  
+        'xanchor': 'center',
+        'x': 0.5,    
+    },
+    xaxis_title=None, 
+    yaxis_title=None,
+    legend_title_text='',  
+    
+)
+    st.plotly_chart(fig) 
+    
+
+    
+# Histogram for Exarta
+
+def plot_histograms_exarta(product_name, platform_name, df):
+    df = df[df['product'] == product_name]
+    
+    platform_metrics = {
+        'youtube': ['clicks', 'views', 'daily_spend'],
+        'meta': ['clicks', 'reach', 'daily_spend'],
+        'shopify': ['clicks', 'daily_spend'], 
+        'ppc': ['clicks', 'daily_spend', 'views'],
+        
     }
     
     if platform_name in platform_metrics:
@@ -187,11 +304,26 @@ def plot_histograms_zeniva(product_name, platform_name, df):
         y='Value', 
         color='Metric', 
         barmode='group', 
-        title=f'{platform_name.capitalize()} Metrics',
+        title=f'{platform_name.capitalize()} ',
         height=450,
         width=450,
         color_discrete_map=color_discrete_map,
         )
+    fig.update_layout(
+    legend={
+        'orientation': 'h', 
+        'yanchor': 'bottom', 
+        'y': -0.3,  
+        'xanchor': 'center',
+        'x': 0.5,    
+    },
+    xaxis_title=None, 
+    yaxis_title=None,
+    legend_title_text='')
+
+    
  
-    # Display the figure in Streamlit
-    st.plotly_chart(fig)
+ 
+    st.plotly_chart(fig) 
+    
+        
